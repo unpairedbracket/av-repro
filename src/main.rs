@@ -1,5 +1,5 @@
 use avian3d::prelude::{PhysicsDebugPlugin, *};
-use bevy::{input::keyboard::KeyboardInput, prelude::*};
+use bevy::prelude::*;
 
 fn main() {
     App::new()
@@ -11,7 +11,7 @@ fn main() {
             PhysicsDebugPlugin::default(),
         ))
         .add_systems(Startup, startup)
-        .add_systems(Update, (input, draw))
+        .add_systems(Update, input)
         .run();
 }
 
@@ -22,10 +22,7 @@ fn startup(mut cmd: Commands) {
         RigidBody::Dynamic,
         AngularVelocity::default(),
         Collider::cuboid(1f32, 1f32, 1f32),
-        LockedAxes::default()
-            .lock_translation_z()
-            .lock_rotation_y()
-            .lock_rotation_x(),
+        LockedAxes::default().lock_rotation_y().lock_rotation_x(),
         Transform::default().looking_to(Vec3::X, Vec3::Z),
     ));
 
@@ -36,22 +33,14 @@ fn startup(mut cmd: Commands) {
     });
 }
 
-fn draw(cubes: Query<&Transform, With<Collider>>, mut gizmos: Gizmos) {
-    for cube_transform in cubes.iter() {
-        gizmos.cuboid(*cube_transform, Color::WHITE);
-    }
-}
-
-// Move the cube around with the WSAD keys
+// Move the cube around with the A/D keys
 fn input(
-    mut cubes: Query<(&Transform, &mut AngularVelocity), With<Collider>>,
+    mut cubes: Query<&mut AngularVelocity, With<Collider>>,
     input: Res<ButtonInput<KeyCode>>,
     time: Res<Time>,
 ) {
-    if let Ok((transform, mut angular_velocity)) = cubes.get_single_mut() {
-        if input.pressed(KeyCode::KeyW) {
-        } else if input.pressed(KeyCode::KeyS) {
-        } else if input.pressed(KeyCode::KeyA) {
+    if let Ok(mut angular_velocity) = cubes.get_single_mut() {
+        if input.pressed(KeyCode::KeyA) {
             **angular_velocity = Vec3::Z * 100.0 * time.delta_seconds();
         } else if input.pressed(KeyCode::KeyD) {
             **angular_velocity = -Vec3::Z * 100.0 * time.delta_seconds();
