@@ -34,18 +34,14 @@ fn startup(mut cmd: Commands) {
 }
 
 // Move the cube around with the A/D keys
-fn input(
-    mut cubes: Query<&mut AngularVelocity, With<Collider>>,
-    input: Res<ButtonInput<KeyCode>>,
-    time: Res<Time>,
-) {
-    if let Ok(mut angular_velocity) = cubes.get_single_mut() {
+fn input(mut cubes: Query<&mut ExternalTorque, With<Collider>>, input: Res<ButtonInput<KeyCode>>) {
+    if let Ok(mut torque) = cubes.get_single_mut() {
         if input.pressed(KeyCode::KeyA) {
-            **angular_velocity = Vec3::Z * 100.0 * time.delta_seconds();
+            **torque = Vec3::Z;
         } else if input.pressed(KeyCode::KeyD) {
-            **angular_velocity = -Vec3::Z * 100.0 * time.delta_seconds();
+            **torque = -Vec3::Z;
         } else {
-            **angular_velocity = Vec3::ZERO;
+            **torque = Vec3::ZERO;
         }
     }
 }

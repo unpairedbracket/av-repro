@@ -6,5 +6,7 @@ edition = "2021"
 [dependencies]
 bevy = { version = "0.14", features = ["serialize"], default-features = true }
 serde = "1"
-# avian3d = "=0.1.0"
-avian3d = "=0.1.1"
+# avian3d = "=0.1.0" # Doesn't work 
+# avian3d = "=0.1.1" # Doesn't work
+avian3d = "=0.1.2" # Doesn't work
+# avian3d = { git = "https://github.com/unpairedbracket/avian", branch = "fix_gyro" } #works
